@@ -52,7 +52,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     6.5 Input `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin`; \
     6.6 Input `sudo docker run hello-world` to vertify the installation. \
   7. Install spark and some other softwares as the master node through dockerfile `docker build -t your_image_name:master https://raw.githubusercontent.com/HiCiChlid/geosci-pyenv/main/dockerfile`. \
-  8. Install the slaver node through dockerfile `docker build -t your_image_name:slaver https://raw.githubusercontent.com/HiCiChlid/geosci-pyenv/main/dockerfile`
+  8. Install the slaver node through dockerfile `docker build -t your_image_name:slaver https://raw.githubusercontent.com/HiCiChlid/pysparkcluster_indocker_bynetworkcable/main/dockerfile`
     
         
         
