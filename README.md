@@ -37,7 +37,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
         Right click Ethernet, and set static ip (e.g., 192.168.0.1) and subnet mask (e.g., 255.255.255.0, the same as the above setting); \
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165896789-7feabff9-ddc1-4609-8c40-7e6037e49e9b.png" width="900"></div>
         5.4.4 Set static ip for VM linux, referring step 4.6, but change the ip as 196.168.0.3; \
-        5.4.5 Vertify that linux machine, Windows machine and VM machine are located in the same local area network; \
+        5.4.5 Now three machine, including linux machine, Windows machine and VM machine are located in the same local area network, we can vertify them through "ping": \
         In VM:
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165898924-16fa25ec-9dd9-43ea-817d-0d4eb0cfe28b.png" width="900"></div>
         In Windows:
