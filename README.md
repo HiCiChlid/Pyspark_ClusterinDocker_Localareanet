@@ -50,7 +50,8 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     6.3 Input `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null` and press 'Enter'; \
     6.4 Input `sudo apt-get update`; \
     6.5 Input `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin`; \
-    6.6 Input `sudo docker run hello-world` to vertify the installation.
+    6.6 Input `sudo docker run hello-world` to vertify the installation; \
+    6.7 Refer to https://docs.docker.com/engine/install/linux-postinstall/ to do some more things for docker.
   7. Install spark and some other softwares as the master node through dockerfile `docker build -t your_image_name:master https://raw.githubusercontent.com/HiCiChlid/geosci-pyenv/main/dockerfile`. \
      Install the slaver node through dockerfile `docker build -t your_image_name:slaver https://raw.githubusercontent.com/HiCiChlid/pysparkcluster_indocker_bynetworkcable/main/dockerfile` \
      You can choose which node to deploy on which machine.
