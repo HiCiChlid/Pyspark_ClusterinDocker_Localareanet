@@ -26,7 +26,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
  5. If one linux and one Windows: \
     5.1 Linux machine's configration refers to step4; \
     5.2 In Windows, install Vmware station player(VM); \
-    5.3 Install linux (e.g., ubuntu) in the VM and install some softwares referring to step 4.3; \
+    5.3 Install linux (e.g., ubuntu) in the VM and install some softwares referring to step 4.3; To use the shared clipboard, install `apt install open-vm-tools open-vm-tools-desktop` in VM. \
     5.4 Network configuration: \
         5.4.1 In Vmware station player, bridge the v-net card with the net card with physical net port (or called as Ethernet), as shown in the following figure; \
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165894176-eaabd33a-2bba-4265-b509-4549cf5471ab.png" width="900"></div>
@@ -44,7 +44,14 @@ The instruction of deploying Pyspark cluster based on docker between two compute
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165899678-5388706e-2fec-430b-b75d-e9458ce94205.png" width="900"></div>
         In linux:
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165899990-77df93d5-72e8-4fa4-a20a-961f0af8eb05.png" width="900"></div>
-  6.
+  6. Install docker for linux machines (physicalM and VM): \
+    6.1 Input `sudo apt-get install ca-certificates curl gnupg lsb-release` in terminal and wait for installation finishing; \
+    6.2 Input `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg` and press 'Enter'; \
+    6.3 Input `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null` and press 'Enter'; \
+    6.4 Input `sudo apt-get update`; \
+    6.5 Input `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin`; \
+    6.6 Input `sudo docker run hello-world` to vertify the installation.\
+    
         
         
 
