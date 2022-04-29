@@ -55,12 +55,21 @@ The instruction of deploying Pyspark cluster based on docker between two compute
      Install the slaver node through dockerfile `docker build -t your_image_name:slaver https://raw.githubusercontent.com/HiCiChlid/pysparkcluster_indocker_bynetworkcable/main/dockerfile` \
      You can choose which node to deploy on which machine.
   8. Open net card promiscuous mode for both linux machines，`ip link set eno1 promisc on` for PhyM's ethernet net card named as eno1, and `ip link set ens33 promisc on` for VM's net card named as ens33. If success, "ifconfig" appears PROMISC as shown in red rectangle. <div align=center><img src="https://user-images.githubusercontent.com/43268820/165923712-b55b41fb-0204-4279-9d73-5d697342b417.png" width="900"></div>
-  9. Due to both linux machines are connected through the windows machine (192.168.0.1), so the Gateway is 192.168.0.1; \
+  9. Due to both linux machines are connected through the windows machine (192.168.0.1), so the Gateway is 192.168.0.1;
   10. Create docker net card for PhyM `docker network create -d macvlan --subnet=192.168.0.30/24 --gateway=192.168.0.1 -o parent=eno1 -o macvlan_mode=bridge eth0_1`,  (subnet=192.168.0.30, just an example); \
-  and similarly, we can create docker net card for VM `docker network create -d macvlan --subnet=192.168.0.40/24 --gateway=192.168.0.1 -o parent=ens33 -o macvlan_mode=bridge eth0_1`, (subnet=192.168.0.40, just an example); \
-  and we can check the docker network to find the new net card through `docker network ls`;<div align=center><img src="https://user-images.githubusercontent.com/43268820/165931945-d90a6a29-81c3-461f-8a79-ecc257b3bef2.png" width="900"></div>
-  11. ds
-  12. 
+    and similarly, we can create docker net card for VM `docker network create -d macvlan --subnet=192.168.0.40/24 --gateway=192.168.0.1 -o parent=ens33 -o macvlan_mode=bridge eth0_1`, (subnet=192.168.0.40, just an example); \
+    and we can check the docker network to find the new net card through `docker network ls`;<div align=center><img src="https://user-images.githubusercontent.com/43268820/165931945-d90a6a29-81c3-461f-8a79-ecc257b3bef2.png" width="900"></div>
+  11. Create docker containers for two machines, \
+    In PhyM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.30 --name=spark30 your_image_name:slaver /bin/bash`; \
+    In PhyM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.31 --name=spark31 your_image_name:slaver /bin/bash`; \
+    In VM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.40 --name=spark40 your_image_name:slaver /bin/bash`; \
+    In VM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.41 --name=spark41 your_image_name:slaver /bin/bash`;
+  12. Check network connections between containers, for example, "spark40" ping "spark30"; or "spark31" ping "spark41"; <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="900"></div>
+  13
+
+  15. 
+
+  13. 
 
 
   
