@@ -44,15 +44,31 @@ The instruction of deploying Pyspark cluster based on docker between two compute
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165899678-5388706e-2fec-430b-b75d-e9458ce94205.png" width="900"></div>
         In linux:
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165899990-77df93d5-72e8-4fa4-a20a-961f0af8eb05.png" width="900"></div>
-  6. Install docker for linux machines (physicalM and VM): \
+  6. Install docker for linux machines (physical machine [PhyM] and VM): \
     6.1 Input `sudo apt-get install ca-certificates curl gnupg lsb-release` in terminal and wait for installation finishing; \
     6.2 Input `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg` and press 'Enter'; \
     6.3 Input `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null` and press 'Enter'; \
     6.4 Input `sudo apt-get update`; \
     6.5 Input `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin`; \
-    6.6 Input `sudo docker run hello-world` to vertify the installation. \
+    6.6 Input `sudo docker run hello-world` to vertify the installation.
   7. Install spark and some other softwares as the master node through dockerfile `docker build -t your_image_name:master https://raw.githubusercontent.com/HiCiChlid/geosci-pyenv/main/dockerfile`. \
-  8. Install the slaver node through dockerfile `docker build -t your_image_name:slaver https://raw.githubusercontent.com/HiCiChlid/pysparkcluster_indocker_bynetworkcable/main/dockerfile`
+     Install the slaver node through dockerfile `docker build -t your_image_name:slaver https://raw.githubusercontent.com/HiCiChlid/pysparkcluster_indocker_bynetworkcable/main/dockerfile` \
+     You can choose which node to deploy on which machine.
+  8. Open net card promiscuous mode for both linux machines，`ip link set eno1 promisc on` for PhyM's ethernet net card named as eno1, and `ip link set ens33 promisc on` for VM's net card named as ens33. If success, "ifconfig" appears PROMISC as shown in red rectangle. <div align=center><img src="https://user-images.githubusercontent.com/43268820/165923712-b55b41fb-0204-4279-9d73-5d697342b417.png" width="900"></div>
+  9. Due to both linux machines are connected through the windows machine (192.168.0.1), so the Gateway is 192.168.0.1; \
+  10. Create docker net card for PhyM `docker network create -d macvlan --subnet=192.168.0.30/24 --gateway=192.168.0.1 -o parent=eno1 -o macvlan_mode=bridge eth0_1`,  (subnet=192.168.0.30, just an example); \
+  and similarly, we can create docker net card for VM `docker network create -d macvlan --subnet=192.168.0.40/24 --gateway=192.168.0.1 -o parent=ens33 -o macvlan_mode=bridge eth0_1`, (subnet=192.168.0.40, just an example); \
+  and we can check the docker network to find the new net card through `docker network ls`;<div align=center><img src="https://user-images.githubusercontent.com/43268820/165931945-d90a6a29-81c3-461f-8a79-ecc257b3bef2.png" width="900"></div>
+  11. ds
+  12. 
+
+
+  
+ 
+
+
+
+
     
         
         
