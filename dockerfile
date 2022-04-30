@@ -72,7 +72,7 @@ command=/usr/sbin/sshd -D\n'\
 # container needs to open SSH 22 port for visiting from outsides.
 EXPOSE 22
 # start supervisord service
-CMD ["/usr/bin/supervisord"]
+CMD ["supervisord"]
 
 # set default homepath
 WORKDIR /home
