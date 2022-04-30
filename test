@@ -55,5 +55,6 @@ WORKDIR /home
 # create jupyter shortcuts
 RUN touch jp.sh \
 && echo jupyter notebook --ip=0.0.0.0 --no-browser --allow-root > jp.sh
-
+RUN touch gs.sh \
+&& echo ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa > gs.sh
 CMD /bin/bash
