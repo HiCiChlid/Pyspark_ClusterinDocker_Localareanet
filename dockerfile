@@ -25,26 +25,6 @@ RUN apt-get -y update \
     && apt-get install -y iputils-ping \
     && apt-get install -y libcurl4-openssl-dev
 
-# install ssh server about the remote operation
-RUN apt-get install -y openssh-server \
-    && apt-get install -y supervisor \
-    && mkdir -p /var/run/sshd \
-    && mkdir -p /var/log/supervisor \
-    && echo "root:abc123" | chpasswd
-# allow rootssh login
-RUN sed -i "s/#PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
-RUN sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-# create supervisord.conf
-RUN echo $'[supervisord]\n\
-nodaemon=true\n\
-[program:sshd]\n\
-command=/usr/sbin/sshd -D\n'\
->>/etc/supervisord.conf
-# container needs to open SSH 22 port for visiting from outsides.
-EXPOSE 22
-# start supervisord service
-CMD ["/usr/bin/supervisord"]
-
 # install JAVA
 RUN apt-get install -y openjdk-8-jdk
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
@@ -71,7 +51,28 @@ RUN apt install -y python3.6 \
 RUN pip3 install --upgrade pip \
 && pip3 install jupyter==1.0.0 \ 
 && pip3 install findspark==1.4.2 \ 
+&& pip3 install supervisor \
 && pip3 install pyspark==3.0.1
+
+# install ssh server about the remote operation
+RUN apt-get install -y openssh-server \
+    && mkdir -p /var/run/sshd \
+    && mkdir -p /var/log/supervisor \
+    && echo "root:abc123" | chpasswd
+# allow rootssh login
+RUN sed -i "s/#PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
+RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+RUN sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+# create supervisord.conf
+RUN echo $'[supervisord]\n\
+nodaemon=true\n\
+[program:sshd]\n\
+command=/usr/sbin/sshd -D\n'\
+>>/etc/supervisord.conf
+# container needs to open SSH 22 port for visiting from outsides.
+EXPOSE 22
+# start supervisord service
+CMD ["/usr/bin/supervisord"]
 
 # set default homepath
 WORKDIR /home
