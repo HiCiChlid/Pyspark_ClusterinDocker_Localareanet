@@ -64,7 +64,7 @@ RUN sed -i "s/#PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
 RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
 RUN sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
 # create supervisord.conf
-RUN echo $'[supervisord]\n\
+RUN echo '[supervisord]\n\
 nodaemon=true\n\
 [program:sshd]\n\
 command=/usr/sbin/sshd -D\n'\
