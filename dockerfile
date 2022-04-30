@@ -30,7 +30,7 @@ RUN apt-get install -y openssh-server \
     && apt-get install -y supervisor \
     && mkdir -p /var/run/sshd \
     && mkdir -p /var/log/supervisor \
-    && echo "root:abcd1234" | chpasswd
+    && echo "root:abc123" | chpasswd
 # allow rootssh login
 RUN sed -i "s/#PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
 RUN sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
