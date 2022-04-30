@@ -27,10 +27,23 @@ RUN apt-get -y update \
 
 # install ssh server about the remote operation
 RUN apt-get install -y openssh-server \
-    && mkdir /var/run/sshd \
+    && apt-get install -y supervisor \
+    && mkdir -p /var/run/sshd \
+    && mkdir -p /var/log/supervisor \
     && echo "root:abcd1234" | chpasswd
+# allow rootssh login
+RUN sed -i "s/#PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
+RUN sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+# create supervisord.conf
+RUN echo $'[supervisord]\n\
+nodaemon=true\n\
+[program:sshd]\n\
+command=/usr/sbin/sshd -D\n'\
+>>/etc/supervisord.conf
 # container needs to open SSH 22 port for visiting from outsides.
 EXPOSE 22
+# start supervisord service
+CMD ["/usr/bin/supervisord"]
 
 # install JAVA
 RUN apt-get install -y openjdk-8-jdk
