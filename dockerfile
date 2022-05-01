@@ -57,22 +57,16 @@ RUN pip3 install --upgrade pip \
 # install ssh server about the remote operation
 RUN apt-get install -y openssh-server \
     && mkdir -p /var/run/sshd \
-    && mkdir -p /var/log/supervisor \
     && echo "root:abc123" | chpasswd
 # allow rootssh login
-RUN sed -i "s/#PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
-RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-RUN sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-# create supervisord.conf
-RUN echo '[supervisord]\n\
-nodaemon=true\n\
-[program:sshd]\n\
-command=/usr/sbin/sshd -D\n'\
->>/etc/supervisord.conf
+RUN sed -i "s/#\?PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
+RUN sed -i "s/#\?PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+RUN sed -i "s/#\?PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+
 # container needs to open SSH 22 port for visiting from outsides.
 EXPOSE 22
-# start supervisord service
-CMD ["supervisord"]
+
+ENTRYPOINT service ssh restart && bash
 
 # set default homepath
 WORKDIR /home
@@ -80,5 +74,6 @@ WORKDIR /home
 # create jupyter shortcuts
 RUN touch jp.sh \
 && echo jupyter notebook --ip=0.0.0.0 --no-browser --allow-root > jp.sh
-
+RUN touch gs.sh \
+&& echo ssh-keygen -t rsa -P \'\' -f ~/.ssh/id_rsa > gs.sh
 CMD /bin/bash
