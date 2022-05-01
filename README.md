@@ -95,10 +95,47 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       14.7 When logining to PhyM and VM through SSH in VScode, we can also install "Docker" plugin to manage the docker images and containers.
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132416-58c2790f-3807-4a98-9e01-f30db64a33d0.png" width="300"></div>  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132433-82535320-aa91-4daa-8a16-2015a523253e.png" width="300"></div>  
- 15. Mount HostM's folders to VM, and set it self-booting, referring to the link https://linuxhint.com/mount_vmware_shares_command_line_linux_vm/#:~:text=To%20share%20a%20directory%2Ffolder%20from%20the%20host%20to%20a,Shared%20Folders%2C%20select%20Always%20enabled.  
+ 15. *Mount HostM's folders to VM, and set it self-booting, referring to the link https://linuxhint.com/mount_vmware_shares_command_line_linux_vm/#:~:text=To%20share%20a%20directory%2Ffolder%20from%20the%20host%20to%20a,Shared%20Folders%2C%20select%20Always%20enabled.  
      Self-booting: after `sudo su` add `.host:/ /mnt fuse.vmhgfs-fuse allow_other,defaults 0 0` to /etc/fstab.  
- 16. Master node can be recreated through:  
+     *Master node can be recreated through:  
       `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v [connected_path_in_your_computer]:/home/current -id --name=[container_name] -p 8888:8888 -p 4040:4040 --shm-size 2g [your_image_name]:[version] /bin/bash`
+ 16. Configure spark cluster  
+      16.1 Attain spark configration path, `cd /usr/local/spark/conf`;  
+      16.2 Create environmental file through `cp spark-env.sh.template spark-env.sh`;  
+      16.3 Add Java home to spark-env.sh, `vim spark-env.sh`, press 'i' to enter "Insert" mode, and type `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64`, and then press 'esc' to end the insert mode, and then press ':wq' to exit vim;   
+      16.4 Copy spark-env.sh to other nodes (docker containers),  
+       `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.41:/usr/local/spark/conf`,  
+       `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.30:/usr/local/spark/conf`,  
+       `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.31:/usr/local/spark/conf`;  
+      16.5 Create slave file through `cp slave.template slave`;  
+      16.6 Edit slave file, `vim slave`, press 'i' to enter "Insert" mode, delete localhost and type  
+      ```
+      192.168.0.41
+      192.168.0.30
+      192.168.0.31
+      ```  
+      into it, and then press 'esc' to end the insert mode, and then press ':wq' to exit vim;   
+      16.7 Change host name in the master node (otherwise workers can not be set up), `hostname 192.168.0.40`;  
+      16.8 Change ip with hostname (otherwise authentication disabled issues, referring to the link https://zhuanlan.zhihu.com/p/163407531)  
+          16.8.1 Remember each docker container's id through `docker ps -a`;  
+          <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151412-22330d32-6073-422c-9db2-8abb345c096b.png" width="900"></div>  
+          18.8.2 In Vm or PhyM, stop docker service, `service docker stop`;  
+          18.8.3 configure docker through changing the file, `cd /var/lib/docker/containers`  
+     <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151077-8612c58e-ff24-471d-b04b-160f03c808ef.png" width="600"></div>  
+          18.8.4 Change orginal Hostname in file 'hostname' and 'config.v2.json' to `master` as an example (also change slave41, slave30, slave31 in other machines);<div align=center><img src="https://user-images.githubusercontent.com/43268820/166151744-ab9e71e7-8cd8-45f9-8fda-cd4221bce796.png" width="900"></div>  
+          18.8.5 Change the host content through a .sh script:  
+          #- Attain 'master' node;  
+          18.8.5.2 Input `vim /root/init.sh` and write the following contents:```  
+          #!/bin/bash   
+          echo 127.0.0.1 localhost > /etc/hosts   
+          echo 192.168.231.30 slave30 >> /etc/hosts   
+          echo 192.168.231.31 slave31 >> /etc/hosts   
+          echo 192.168.231.40 master >> /etc/hosts   
+          echo 192.168.231.41 slave41 >> /etc/hosts   
+          /bin/bash```   
+          
+
+         
 
 
 
