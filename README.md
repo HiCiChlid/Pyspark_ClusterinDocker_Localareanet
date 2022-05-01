@@ -71,34 +71,34 @@ The instruction of deploying Pyspark cluster based on docker between two compute
   13. Configure one node (e.g., spark40) to log in to other containers through SSH without password.  
       13.1 Start all relevant containers in both PhyM and VM. `docker start spark40` (and spark41, spark30, spark31);  
       13.2 Attain the node (e.g., spark40), `docker exec -it spark40 /bin/bash`;  
-      13.3 In spark40, input `sh gs.sh` to generate the public/private rsa key pair;  
-      
-      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130560-d736f485-9563-476c-904a-1629c14ef05e.png" width="600"></div>  
+      13.3 In spark40, input `sh gs.sh` to generate the public/private rsa key pair; <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130560-d736f485-9563-476c-904a-1629c14ef05e.png" width="600"></div>  
       13.4 Copy the key to other docker containers,  
       `ssh-copy-id root@192.168.0.41`, and input the password `abc123` (you can change it by yourselves);  <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130655-a9b6fbc1-98f9-425a-b80f-21d34e176130.png" width="600"></div>   
       `ssh-copy-id root@192.168.0.30`, and input the password `abc123`;  
-       `ssh-copy-id root@192.168.0.31`, and input the password `abc123`;  
+      `ssh-copy-id root@192.168.0.31`, and input the password `abc123`;  
       13.5 test the ssh connection, `ssh root@192.168.0.41` etc.  
-      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130719-8b26daf5-a790-4d37-ac9b-4e8adcee9fef.png" width="600"></div>   
-  14*. Configure VScode (in Windows host machine, 192.168.0.1) to realize remotely control linux PhyM and VM:  
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130719-8b26daf5-a790-4d37-ac9b-4e8adcee9fef.png" width="600"></div> 
+  14. *Configure VScode (in Windows host machine, 192.168.0.1) to realize remotely control linux PhyM and VM.  
       14.1 Open VScode and install "Remote - SSH" plugin.  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130878-f553dbbf-ffef-4b80-89a6-5c8d4212682b.png" width="300"></div>  
       14.2 Install SSH for windows, referring to the link https://websiteforstudents.com/how-to-install-openssh-client-in-windows-11/ ;  
+      
       14.3 Open powershell (or Terminal), and then generate the public/private rsa key pair through inputing `ssh-keygen`. (p.s., using password function may cause this issue. https://github.com/microsoft/vscode-remote-release/issues/2581)  
       14.4 Copy the key to other machines (including PhyM, VM, Docker containers, etc.) by the example:  
       `type $env:USERPROFILE\.ssh\id_rsa.pub | ssh root@192.168.0.40 "cat >> ~/.ssh/authorized_keys"`  
       If not root user, you can just input:  
       `type $env:USERPROFILE\.ssh\id_rsa.pub | ssh 192.168.0.2 "cat >> ~/.ssh/authorized_keys"`  
-      14.5 Create SSH nodes in "Remote - SSH", you can click '+',  
-      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132148-350ad000-9b08-43d6-9354-561f93a2a98f.png" width="300"></div>  
-      and input `ssh root@192.168.0.40` and then press 'Enter' (or for non-root user `ssh 192.168.0.2`), and then choose the first one config path;  
-      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132232-bc139e00-c977-4c29-a536-1138b2c65534.png" width="600"></div>  
+      14.5 Create SSH nodes in "Remote - SSH", you can click '+',<div align=center><img src="https://user-images.githubusercontent.com/43268820/166132148-350ad000-9b08-43d6-9354-561f93a2a98f.png" width="300"></div>  
+      and input `ssh root@192.168.0.40` and then press 'Enter' (or for non-root user `ssh 192.168.0.2`), and then choose the first one config path; <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132232-bc139e00-c977-4c29-a536-1138b2c65534.png" width="600"></div>  
       14.6 Log in the node through click the right folder icon, and wait for a minute to attain the node (including PhyM, VM, and Docker containers);  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132355-e4743cfa-c089-476b-80c8-95608b54f5a7.png" width="600"></div>  
       14.7 When logining to PhyM and VM through SSH in VScode, we can also install "Docker" plugin to manage the docker images and containers.
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132416-58c2790f-3807-4a98-9e01-f30db64a33d0.png" width="300"></div>  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132433-82535320-aa91-4daa-8a16-2015a523253e.png" width="300"></div>  
-
+ 15. Mount HostM's folders to VM, and set it self-booting, referring to the link https://linuxhint.com/mount_vmware_shares_command_line_linux_vm/#:~:text=To%20share%20a%20directory%2Ffolder%20from%20the%20host%20to%20a,Shared%20Folders%2C%20select%20Always%20enabled.  
+     Self-booting: after `sudo su` add `.host:/ /mnt fuse.vmhgfs-fuse allow_other,defaults 0 0` to /etc/fstab.  
+ 16. Master node can be recreated through:  
+      `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v [connected_path_in_your_computer]:/home/current -id --name=[container_name] -p 8888:8888 -p 4040:4040 --shm-size 2g [your_image_name]:[version] /bin/bash`
 
 
 
