@@ -66,7 +66,17 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     In VM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.40 --name=spark40 your_image_name:slaver /bin/bash`; \
     In VM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.41 --name=spark41 your_image_name:slaver /bin/bash`;
   12. Check network connections between containers, for example, "spark40" ping "spark30"; or "spark31" ping "spark41"; <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="900"></div>
-  13. 
+  13. Configure one node (e.g., spark40) to log in to other containers without password. \
+      13.1 Start all relevant containers in both PhyM and VM. `docker start spark40` (and spark41, spark30, spark31); \
+      13.2 Attain this one node (e.g., spark40), `docker exec -it spark40 /bin/bash`; \
+      13.3 In spark40, input `sh gs.sh` to generate the public/private rsa key pair; \
+      13.4 Copy the key to other docker containers, \
+              `ssh-copy-id root@192.168.0.41`, and input the password `abc123` (you can change it by yourselves); \
+              `ssh-copy-id root@192.168.0.30`, and input the password `abc123`; \
+              `ssh-copy-id root@192.168.0.31`, and input the password `abc123`; \
+      14.5 test the ssh connection, `ssh root@192.168.0.41` etc.; 
+      
+      16.
 
   15. 
 
