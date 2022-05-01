@@ -72,11 +72,12 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       13.1 Start all relevant containers in both PhyM and VM. `docker start spark40` (and spark41, spark30, spark31);  
       13.2 Attain the node (e.g., spark40), `docker exec -it spark40 /bin/bash`;  
       13.3 In spark40, input `sh gs.sh` to generate the public/private rsa key pair;  
+      
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130560-d736f485-9563-476c-904a-1629c14ef05e.png" width="600"></div>  
       13.4 Copy the key to other docker containers,  
-              `ssh-copy-id root@192.168.0.41`, and input the password `abc123` (you can change it by yourselves);  <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130655-a9b6fbc1-98f9-425a-b80f-21d34e176130.png" width="600"></div>   
-              `ssh-copy-id root@192.168.0.30`, and input the password `abc123`;  
-              `ssh-copy-id root@192.168.0.31`, and input the password `abc123`;  
+      `ssh-copy-id root@192.168.0.41`, and input the password `abc123` (you can change it by yourselves);  <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130655-a9b6fbc1-98f9-425a-b80f-21d34e176130.png" width="600"></div>   
+      `ssh-copy-id root@192.168.0.30`, and input the password `abc123`;  
+       `ssh-copy-id root@192.168.0.31`, and input the password `abc123`;  
       13.5 test the ssh connection, `ssh root@192.168.0.41` etc.  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130719-8b26daf5-a790-4d37-ac9b-4e8adcee9fef.png" width="600"></div>   
   14*. Configure VScode (in Windows host machine, 192.168.0.1) to realize remotely control linux PhyM and VM:  
