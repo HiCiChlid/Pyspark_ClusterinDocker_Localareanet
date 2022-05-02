@@ -148,14 +148,9 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       &ensp;&ensp;&ensp;&ensp;16.7.5.5. Exit the current nodes through inputting `exit` and stop these containers `docker stop slave_41` etc, and then open these containers through `docker start slave_41` etc.;  
       &ensp;&ensp;&ensp;&ensp;16.7.5.6. Re-attain these four nodes through  
       `docker exec geosci-env_M40 /root/init.sh`;  
-      `docker exec slave_41 /root/init.sh`;  
-      `docker exec slave_30 /root/init.sh`;  
-      `docker exec slave_31 /root/init.sh`;  
-      Note that `init.sh` just need to be run only once and next time to attain the containers, it is OK to just input  
-      `docker exec -it geosci-env_M40 /bin/bash`;  
-      `docker exec -it slave_41 /bin/bash`;  
-      `docker exec -it slave_30 /bin/bash`;  
-      `docker exec -it slave_31 /bin/bash`.        
+      `docker exec slave_41 -it /root/init.sh`;  
+      `docker exec slave_30 -it /root/init.sh`;  
+      `docker exec slave_31 -it /root/init.sh`.      
       16.8. Start Spark Cluster  
       &ensp;&ensp;16.8.1 Go to spark path `cd /usr/local/spark`;  
       &ensp;&ensp;16.8.2 Run `./sbin/start-all.sh`;    
