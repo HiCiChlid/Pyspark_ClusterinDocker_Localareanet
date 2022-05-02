@@ -29,16 +29,16 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     5.2. In Windows host machine(HostM), install Vmware station player sofware and create a new Vmware machine(VM);  
     5.3. Install linux OS (e.g., ubuntu) for VM and install some softwares referring to step 4.3; To use the shared clipboard, please install `apt install open-vm-tools open-vm-tools-desktop` in VM.  
     5.4. Network configuration:  
-        5.4.1. Open Vmware station player software, and bridge the v-net card with the net card with physical net port (or called as Ethernet), as shown in the following figure;  
+    &ensp;&ensp;5.4.1. Open Vmware station player software, and bridge the v-net card with the net card with physical net port (or called as Ethernet), as shown in the following figure;  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165894176-eaabd33a-2bba-4265-b509-4549cf5471ab.png" width="900"></div>  
-        5.4.2. To make VM access global Internet, add one more v-net card using NAT mode;  
+    &ensp;&ensp;5.4.2. To make VM access global Internet, add one more v-net card using NAT mode;  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165895085-86436994-6282-4301-bbf0-3fe06268fa3e.png" width="900"></div>  
-        5.4.3. Set static ip for windows host machine (HostM), and you can click Start > Settings > Control Panel > Network and Internet > Network and Sharing Center > Change adapter settings.  
+    &ensp;&ensp;5.4.3. Set static ip for windows host machine (HostM), and you can click Start > Settings > Control Panel > Network and Internet > Network and Sharing Center > Change adapter settings.  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165895852-d7cef5cb-3dfe-4c25-b8a8-bdea2f7dae30.png" width="600"></div>  
         Right click Ethernet, and set static ip (e.g., 192.168.0.1) and subnet mask (e.g., 255.255.255.0, the same as the above setting);  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165896789-7feabff9-ddc1-4609-8c40-7e6037e49e9b.png" width="600"></div>
-        5.4.4. Set static ip for VM's linux, referring step 4.6, but change the ip as 196.168.0.3;  
-        5.4.5. Now three machines, including linux physical machine (PhyM), Windows host machine (HostM) and Vmware machine (VM) are located in the same local area network, we can vertify them through "ping":  
+    &ensp;&ensp;5.4.4. Set static ip for VM's linux, referring step 4.6, but change the ip as 196.168.0.3;  
+    &ensp;&ensp;5.4.5. Now three machines, including linux physical machine (PhyM), Windows host machine (HostM) and Vmware machine (VM) are located in the same local area network, we can vertify them through "ping":  
         In VM:  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165898924-16fa25ec-9dd9-43ea-817d-0d4eb0cfe28b.png" width="600"></div>  
         In HostM:  
@@ -117,16 +117,16 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       into it, and then press `esc` to end the insert mode, and then press `:wq` to exit vim;   
       16.7. Change host name in the master node (otherwise workers can not be set up), `hostname 192.168.0.40`;  
       16.8. Change ip with hostname (otherwise authentication disabled issues, referring to the link https://zhuanlan.zhihu.com/p/163407531);  
-          16.8.1. Remember each docker container's id through `docker ps -a`;  
+      &ensp;&ensp;16.8.1. Remember each docker container's id through `docker ps -a`;  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151412-22330d32-6073-422c-9db2-8abb345c096b.png" width="900"></div>  
-          18.8.2. In Vm or PhyM, stop docker service, `service docker stop`;  
-          18.8.3. Configure docker through changing the file `cd /var/lib/docker/containers`;  
+      &ensp;&ensp;18.8.2. In Vm or PhyM, stop docker service, `service docker stop`;  
+      &ensp;&ensp;18.8.3. Configure docker through changing the file `cd /var/lib/docker/containers`;  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151077-8612c58e-ff24-471d-b04b-160f03c808ef.png" width="600"></div>  
-          18.8.4. Change orginal Hostname in file 'hostname' and 'config.v2.json' to `master` as an example (also change slave41, slave30, slave31 in other machines);  
+      &ensp;&ensp;18.8.4. Change orginal Hostname in file 'hostname' and 'config.v2.json' to `master` as an example (also change slave41, slave30, slave31 in other machines);  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151744-ab9e71e7-8cd8-45f9-8fda-cd4221bce796.png" width="900"></div> 
-          18.8.5. Change the host content through one `.sh` script:  
-              18.8.5.1. Attain 'master' node;  
-              18.8.5.2. Input `vim /root/init.sh` and write the following contents:  
+      &ensp;&ensp;18.8.5. Change the host content through one `.sh` script:  
+      &ensp;&ensp;&ensp;&ensp;18.8.5.1. Attain 'master' node;  
+      &ensp;&ensp;&ensp;&ensp;18.8.5.2. Input `vim /root/init.sh` and write the following contents:  
         ```
         #!/bin/bash
         echo 127.0.0.1 localhost > /etc/hosts
