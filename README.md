@@ -118,17 +118,17 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       16.7. Change node's ip with hostname (otherwise authentication disabled issues, referring to the [link](https://zhuanlan.zhihu.com/p/163407531));  
       &ensp;&ensp;16.7.1. Remember each docker container's id through `docker ps -a`;  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151412-22330d32-6073-422c-9db2-8abb345c096b.png" width="900"></div>  
-      &ensp;&ensp;18.7.2. In Vm or PhyM, stop docker service, `service docker stop`;  
-      &ensp;&ensp;18.7.3. Go to the path `cd /var/lib/docker/containers/bc...` where docker can be configured through changing the files;  
+      &ensp;&ensp;16.7.2. In Vm or PhyM, stop docker service, `service docker stop`;  
+      &ensp;&ensp;16.7.3. Go to the path `cd /var/lib/docker/containers/bc...` where docker can be configured through changing the files;  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151077-8612c58e-ff24-471d-b04b-160f03c808ef.png" width="600"></div>  
-      &ensp;&ensp;18.7.4. Change orginal Hostname in file 'hostname' and 'config.v2.json' to `master` as an example (also change slave41, slave30, slave31 in other machines);  
+      &ensp;&ensp;16.7.4. Change orginal Hostname in file 'hostname' and 'config.v2.json' to `master` as an example (also change slave41, slave30, slave31 in other machines);  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151744-ab9e71e7-8cd8-45f9-8fda-cd4221bce796.png" width="900"></div>
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166190077-e4a789f2-639f-41c9-a4b7-4a59ee87c595.png" width="600"></div> 
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166189967-201e672a-2bd2-41ad-b032-0735d656df36.png" width="600"></div> 
 
-      &ensp;&ensp;18.7.5. Change the host content through one `.sh` script:  
-      &ensp;&ensp;&ensp;&ensp;18.7.5.1. Attain 'master' node;  
-      &ensp;&ensp;&ensp;&ensp;18.7.5.2. Input `vim /root/init.sh` and write the following contents into it:  
+      &ensp;&ensp;16.7.5. Create a host change scrtipt `init.sh` to change the hosts:  
+      &ensp;&ensp;&ensp;&ensp;16.7.5.1. Attain 'master' node;  
+      &ensp;&ensp;&ensp;&ensp;16.7.5.2. Input `vim /root/init.sh` and write the following contents into it:  
         ```
         #!/bin/bash
         echo 127.0.0.1 localhost > /etc/hosts
@@ -138,8 +138,42 @@ The instruction of deploying Pyspark cluster based on docker between two compute
         echo 192.168.231.41 slave41 >> /etc/hosts
         /bin/bash
         ```
+      &ensp;&ensp;&ensp;&ensp;16.7.5.3. `chmod +x /root/init.sh`
+      &ensp;&ensp;&ensp;&ensp;16.7.5.4. Copy it to the other three nodes, through  
+      `scp /root/init.sh root@192.168.0.41:/root/init.sh`;  
+      `scp /root/init.sh root@192.168.0.30:/root/init.sh`;  
+      `scp /root/init.sh root@192.168.0.31:/root/init.sh`;  
+      &ensp;&ensp;&ensp;&ensp;16.7.5.5. Exit the current nodes through inputting `exit` and stop these containers `docker stop slave_41` etc, and then open these containers through `docker start slave_41` etc.;  
+      &ensp;&ensp;&ensp;&ensp;16.7.5.6. Re-attain these four nodes through  
+      `docker exec geosci-env_M40 /root/init.sh`;  
+      `docker exec slave_41 /root/init.sh`;  
+      `docker exec slave_30 /root/init.sh`;  
+      `docker exec slave_31 /root/init.sh`;  
+      Note that `init.sh` just need to be run only once and next time to attain the containers, it is OK to just input  
+      `docker exec -it geosci-env_M40 /bin/bash`;  
+      `docker exec -it slave_41 /bin/bash`;  
+      `docker exec -it slave_30 /bin/bash`;  
+      `docker exec -it slave_31 /bin/bash`.        
+      16.8. Start Spark Cluster  
+      &ensp;&ensp;16.8.1 Go to spark path `cd /usr/local/spark`;  
+      &ensp;&ensp;16.8.2 Run `./sbin/start-all.sh`;    
+      &ensp;&ensp;16.8.3 Input `192.168.0.40:8080` at HostM's brower and you can see: 
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166196184-4207b278-3dbc-4c41-87cd-449b4787047e.png" width="900"></div>
+      There are three workers in the spark cluster;  
+      &ensp;&ensp;16.8.4 You can also change the hosts in HostM, through add `192.168.0.40 master` in the file, and if inputing 'master:8080', it can also work.
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197350-365d0946-bbf6-44b9-863f-dd775cb23382.png" width="300"></div>
+  
+      16.9. Test spark cluster  
+      &ensp;&ensp;16.9.1 Go to spark path `cd /usr/local/spark`;  
+      &ensp;&ensp;16.9.2 Input `./bin/spark-submit --master spark://192.168.0.40:7077 --class org.apache.spark.examples.SparkPi examples/jars/spark-examples_2.11-2.4.5.jar 10000`  
+      We can find:  
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197829-c6ce290e-bbd9-44c2-9a43-a4f1182f54a4.png" width="600"></div>
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197882-ed320699-9055-4a5a-a22f-294209e08eee.png" width="900"></div>
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197932-951ad58f-cf4e-43c5-bd0e-9de37dc2f1d5.png" width="900"></div>
 
-          
+**Succussfully!! Eploying Spark cluster based on dockers between two computers by a network cable**
+      
+
 
          
 
