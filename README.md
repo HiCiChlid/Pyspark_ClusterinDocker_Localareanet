@@ -52,7 +52,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     6.4. Input `sudo apt-get update`;  
     6.5. Input `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin`;  
     6.6. Input `sudo docker run hello-world` to vertify the installation;  
-    6.7. Refer to https://docs.docker.com/engine/install/linux-postinstall/ to do more things for docker，e.g., non-root user, starting on boot.  
+    6.7. Refer to the [link](https://docs.docker.com/engine/install/linux-postinstall/) to do more things for docker，e.g., non-root user, starting on boot.  
   7. Install spark and some other softwares as the master node through dockerfile `docker build -t your_image_name:master https://raw.githubusercontent.com/HiCiChlid/geosci-pyenv/main/dockerfile`.  
      Install the slave node through dockerfile `docker build -t your_image_name:slave https://raw.githubusercontent.com/HiCiChlid/pysparkcluster_indocker_bynetworkcable/main/dockerfile`  
      You can choose which node to deploy on which one machine.  
@@ -62,71 +62,73 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     and similarly, we can create docker net card for VM `docker network create -d macvlan --subnet=192.168.0.40/24 --gateway=192.168.0.1 -o parent=ens33 -o macvlan_mode=bridge eth0_1`, (subnet=192.168.0.40, just an example);  
     and we can check the docker network to find the new net card through `docker network ls`;  
     <div align=center><img src="https://user-images.githubusercontent.com/43268820/165931945-d90a6a29-81c3-461f-8a79-ecc257b3bef2.png" width="600"></div>  
-  11. Create docker containers for two machines,  
-    In PhyM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.30 --name=spark30 your_image_name:slave /bin/bash`;  
-    In PhyM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.31 --name=spark31 your_image_name:slave /bin/bash`;  
-    In VM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.40 --name=spark40 your_image_name:slave /bin/bash`;  
+  11. Mount HostM's folders to VM, and set it self-booting, referring to the [link](https://linuxhint.com/mount_vmware_shares_command_line_linux_vm/#:~:text=To%20share%20a%20directory%2Ffolder%20from%20the%20host%20to%20a,Shared%20Folders%2C%20select%20Always%20enabled).  
+     Self-booting: after `sudo su` add `.host:/ /mnt fuse.vmhgfs-fuse allow_other,defaults 0 0` to /etc/fstab.  
+  12. Create docker containers for two machines,  
+    In VM node1 `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v /mnt/[connected_folder]:/home/current -id --name=geosci-env_M40 -p 8888:8888 -p 4040:4040 --shm-size 2g your_image_name:master /bin/bash`;  
     In VM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.41 --name=spark41 your_image_name:slave /bin/bash`;  
-  12. Check network connections between containers, for example, "spark40" ping "spark30"; or "spark31" ping "spark41";  <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="600"></div>  
-  13. Configure one node (e.g., spark40) to log in to other containers through SSH without password.  
-      13.1. Start all relevant containers in both PhyM and VM. `docker start spark40` (and spark41, spark30, spark31);  
-      13.2. Attain the node (e.g., spark40), `docker exec -it spark40 /bin/bash`;  
-      13.3. In spark40, input `sh gs.sh` to generate the public/private rsa key pair; <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130560-d736f485-9563-476c-904a-1629c14ef05e.png" width="600"></div>  
-      13.4. Copy the key to other docker containers,  
+    In PhyM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.30 --name=spark30 your_image_name:slave /bin/bash`;  
+    In PhyM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.31 --name=spark31 your_image_name:slave /bin/bash`;   
+  13. Check network connections between containers, for example, "spark40" ping "spark30"; or "spark31" ping "spark41";  <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="600"></div>  
+  14. Configure one node (e.g., spark40) to log in to other containers through SSH without password.  
+      14.1. Start all relevant containers in both PhyM and VM. `docker start spark40` (and spark41, spark30, spark31);  
+      14.2. Attain the node (e.g., spark40), `docker exec -it spark40 /bin/bash`;  
+      14.3. In spark40, input `sh gs.sh` to generate the public/private rsa key pair; <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130560-d736f485-9563-476c-904a-1629c14ef05e.png" width="600"></div>  
+      14.4. Copy the key to other docker containers,  
       `ssh-copy-id root@192.168.0.41`, and input the password `abc123` (you can change it by yourselves);  <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130655-a9b6fbc1-98f9-425a-b80f-21d34e176130.png" width="600"></div>   
       `ssh-copy-id root@192.168.0.30`, and input the password `abc123`;  
       `ssh-copy-id root@192.168.0.31`, and input the password `abc123`;  
-      13.5. test the ssh connection, `ssh root@192.168.0.41` etc.  
+      14.5. test the ssh connection, `ssh root@192.168.0.41` etc.  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130719-8b26daf5-a790-4d37-ac9b-4e8adcee9fef.png" width="600"></div> 
-  14. *Configure VScode (in Windows host machine, 192.168.0.1) to realize remotely control linux PhyM and VM.  
-      14.1. Open VScode and install "Remote - SSH" plugin.  
-      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130878-f553dbbf-ffef-4b80-89a6-5c8d4212682b.png" width="300"></div>  
-      14.2. Install SSH for windows, referring to the link https://websiteforstudents.com/how-to-install-openssh-client-in-windows-11/ ;  
-      
-      14.3. Open powershell (or Terminal), and then generate the public/private rsa key pair through inputing `ssh-keygen`. (p.s., using password function may cause this issue. https://github.com/microsoft/vscode-remote-release/issues/2581)  
-      14.4. Copy the key to other machines (including PhyM, VM, Docker containers, etc.) by the example:  
+  15. Configure VScode (in Windows host machine, 192.168.0.1) to realize remotely control linux PhyM and VM.  
+      15.1. Open VScode and install "Remote - SSH" plugin;<div align=center><img src="https://user-images.githubusercontent.com/43268820/166130878-f553dbbf-ffef-4b80-89a6-5c8d4212682b.png" width="300"></div>
+      15.2. Install SSH for windows, referring to the [link](https://websiteforstudents.com/how-to-install-openssh-client-in-windows-11/);  
+      15.3. Open powershell (or Terminal), and then generate the public/private rsa key pair through inputing `ssh-keygen`. (p.s., using password function may cause this [issue](https://github.com/microsoft/vscode-remote-release/issues/2581).);  
+      15.4. Copy the key to other machines (including PhyM, VM, Docker containers, etc.) by the example:  
       `type $env:USERPROFILE\.ssh\id_rsa.pub | ssh root@192.168.0.40 "cat >> ~/.ssh/authorized_keys"`  
       If not root user, you can just input:  
       `type $env:USERPROFILE\.ssh\id_rsa.pub | ssh 192.168.0.2 "cat >> ~/.ssh/authorized_keys"`  
-      14.5. Create SSH nodes in "Remote - SSH", you can click '+',<div align=center><img src="https://user-images.githubusercontent.com/43268820/166132148-350ad000-9b08-43d6-9354-561f93a2a98f.png" width="300"></div>  
+      15.5. Create SSH nodes in "Remote - SSH", you can click '+',<div align=center><img src="https://user-images.githubusercontent.com/43268820/166132148-350ad000-9b08-43d6-9354-561f93a2a98f.png" width="300"></div>  
       and input `ssh root@192.168.0.40` and then press 'Enter' (or for non-root user `ssh 192.168.0.2`), and then choose the first one config path; <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132232-bc139e00-c977-4c29-a536-1138b2c65534.png" width="600"></div>  
-      14.6. Log in the node through click the right folder icon, and wait for a minute to attain the node (including PhyM, VM, and Docker containers);  
+      15.6. Log in the node through click the right folder icon, and wait for a minute to attain the node (including PhyM, VM, and Docker containers);  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132355-e4743cfa-c089-476b-80c8-95608b54f5a7.png" width="600"></div>  
-      14.7. When logining to PhyM and VM through SSH in VScode, we can also install "Docker" plugin to manage the docker images and containers.
+      15.7. When logining to PhyM and VM through SSH in VScode, we can also install "Docker" plugin to manage the docker images and containers.
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132416-58c2790f-3807-4a98-9e01-f30db64a33d0.png" width="300"></div>  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166132433-82535320-aa91-4daa-8a16-2015a523253e.png" width="300"></div>  
- 15. *Mount HostM's folders to VM, and set it self-booting, referring to the link https://linuxhint.com/mount_vmware_shares_command_line_linux_vm/#:~:text=To%20share%20a%20directory%2Ffolder%20from%20the%20host%20to%20a,Shared%20Folders%2C%20select%20Always%20enabled.  
-     Self-booting: after `sudo su` add `.host:/ /mnt fuse.vmhgfs-fuse allow_other,defaults 0 0` to /etc/fstab.  
-     *Master node can be recreated through:  
-      `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v [connected_path_in_your_computer]:/home/current -id --name=[container_name] -p 8888:8888 -p 4040:4040 --shm-size 2g [your_image_name]:[version] /bin/bash`
  16. Configure spark cluster  
       16.1. Attain spark configration path, `cd /usr/local/spark/conf`;  
       16.2. Create environmental file through `cp spark-env.sh.template spark-env.sh`;  
       16.3. Add Java home to spark-env.sh, `vim spark-env.sh`, press 'i' to enter "Insert" mode, and type `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64`, and then press 'esc' to end the insert mode, and then press ':wq' to exit vim;   
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166191310-f6cfff94-fdb1-4775-80e4-cc85568434f6.png" width="600"></div>  
+      
       16.4. Copy spark-env.sh to other nodes (docker containers),  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.41:/usr/local/spark/conf`,  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.30:/usr/local/spark/conf`,  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.31:/usr/local/spark/conf`;  
       16.5. Create slave file through `cp slave.template slave`;  
-      16.6. Edit slave file, `vim slave`, press 'i' to enter "Insert" mode, delete localhost and type  
+      16.6. Edit slave file, `vim slaves`, press 'i' to enter "Insert" mode, delete localhost and type  
       ```
       192.168.0.41
       192.168.0.30
       192.168.0.31
       ```  
       into it, and then press `esc` to end the insert mode, and then press `:wq` to exit vim;   
-      16.7. Change host name in the master node (otherwise workers can not be set up), `hostname 192.168.0.40`;  
-      16.8. Change ip with hostname (otherwise authentication disabled issues, referring to the link https://zhuanlan.zhihu.com/p/163407531);  
-      &ensp;&ensp;16.8.1. Remember each docker container's id through `docker ps -a`;  
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166191622-9b114e84-841d-427f-be0e-61d8aab85029.png" width="600"></div>
+
+      16.7. Change node's ip with hostname (otherwise authentication disabled issues, referring to the [link](https://zhuanlan.zhihu.com/p/163407531));  
+      &ensp;&ensp;16.7.1. Remember each docker container's id through `docker ps -a`;  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151412-22330d32-6073-422c-9db2-8abb345c096b.png" width="900"></div>  
-      &ensp;&ensp;18.8.2. In Vm or PhyM, stop docker service, `service docker stop`;  
-      &ensp;&ensp;18.8.3. Configure docker through changing the file `cd /var/lib/docker/containers`;  
+      &ensp;&ensp;18.7.2. In Vm or PhyM, stop docker service, `service docker stop`;  
+      &ensp;&ensp;18.7.3. Go to the path `cd /var/lib/docker/containers/bc...` where docker can be configured through changing the files;  
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151077-8612c58e-ff24-471d-b04b-160f03c808ef.png" width="600"></div>  
-      &ensp;&ensp;18.8.4. Change orginal Hostname in file 'hostname' and 'config.v2.json' to `master` as an example (also change slave41, slave30, slave31 in other machines);  
-          <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151744-ab9e71e7-8cd8-45f9-8fda-cd4221bce796.png" width="900"></div> 
-      &ensp;&ensp;18.8.5. Change the host content through one `.sh` script:  
-      &ensp;&ensp;&ensp;&ensp;18.8.5.1. Attain 'master' node;  
-      &ensp;&ensp;&ensp;&ensp;18.8.5.2. Input `vim /root/init.sh` and write the following contents:  
+      &ensp;&ensp;18.7.4. Change orginal Hostname in file 'hostname' and 'config.v2.json' to `master` as an example (also change slave41, slave30, slave31 in other machines);  
+          <div align=center><img src="https://user-images.githubusercontent.com/43268820/166151744-ab9e71e7-8cd8-45f9-8fda-cd4221bce796.png" width="900"></div>
+          <div align=center><img src="https://user-images.githubusercontent.com/43268820/166190077-e4a789f2-639f-41c9-a4b7-4a59ee87c595.png" width="600"></div> 
+          <div align=center><img src="https://user-images.githubusercontent.com/43268820/166189967-201e672a-2bd2-41ad-b032-0735d656df36.png" width="600"></div> 
+
+      &ensp;&ensp;18.7.5. Change the host content through one `.sh` script:  
+      &ensp;&ensp;&ensp;&ensp;18.7.5.1. Attain 'master' node;  
+      &ensp;&ensp;&ensp;&ensp;18.7.5.2. Input `vim /root/init.sh` and write the following contents into it:  
         ```
         #!/bin/bash
         echo 127.0.0.1 localhost > /etc/hosts
