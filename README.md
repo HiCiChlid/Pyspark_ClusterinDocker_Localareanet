@@ -5,9 +5,9 @@ The instruction of deploying Pyspark cluster based on docker between two compute
   1. Two computers with the physical network port;  
   2. Extra network cards (2 or more) for the global Internet access;  
   3. One network cable;  
-  4. Linux (e.g., ubuntu) or MS windows installed in these two computers; 
-  5. CPU supporting the virtualization technology, if windows
-  6. Vmware station player, if windows.
+  4. Linux (e.g., ubuntu) or MS Windows installed in these two computers; 
+  5. CPU supporting the virtualization technology, if Windows;
+  6. Vmware station player, if Windows.
 
 ## Steps:
   1. Install Operation System (OS) for each computer;  
@@ -33,7 +33,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165894176-eaabd33a-2bba-4265-b509-4549cf5471ab.png" width="900"></div>  
     &ensp;&ensp;5.4.2. To make VM access global Internet, add one more v-net card using NAT mode;  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165895085-86436994-6282-4301-bbf0-3fe06268fa3e.png" width="900"></div>  
-    &ensp;&ensp;5.4.3. Set static ip for windows host machine (HostM), and you can click Start > Settings > Control Panel > Network and Internet > Network and Sharing Center > Change adapter settings.  
+    &ensp;&ensp;5.4.3. Set static ip for Windows host machine (HostM), and you can click Start > Settings > Control Panel > Network and Internet > Network and Sharing Center > Change adapter settings.  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165895852-d7cef5cb-3dfe-4c25-b8a8-bdea2f7dae30.png" width="600"></div>  
         Right click Ethernet, and set static ip (e.g., 192.168.0.1) and subnet mask (e.g., 255.255.255.0, the same as the above setting);  
         <div align=center><img src="https://user-images.githubusercontent.com/43268820/165896789-7feabff9-ddc1-4609-8c40-7e6037e49e9b.png" width="600"></div>
