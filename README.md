@@ -173,7 +173,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197829-c6ce290e-bbd9-44c2-9a43-a4f1182f54a4.png" width="600"></div>
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197882-ed320699-9055-4a5a-a22f-294209e08eee.png" width="900"></div>
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197932-951ad58f-cf4e-43c5-bd0e-9de37dc2f1d5.png" width="900"></div>
-**Succussfully!! Eploying Spark cluster based on dockers between two computers by a network cable**
+**Succussfully!! Deploying Spark cluster based on dockers between two computers by a network cable**
       
 
 
