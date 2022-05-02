@@ -69,7 +69,9 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     In VM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.41 --name=spark41 your_image_name:slave /bin/bash`;  
     In PhyM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.30 --name=spark30 your_image_name:slave /bin/bash`;  
     In PhyM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.31 --name=spark31 your_image_name:slave /bin/bash`;   
-  13. Check network connections between containers, for example, "spark40" ping "spark30"; or "spark31" ping "spark41";  <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="600"></div>  
+  13. Check network connections between containers, for example, "spark40" ping "spark30"; or "spark31" ping "spark41";  <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="600"></div>
+      I hope master node to access the global Internet, I can input `docker network connect bridge geosci-env_M40`, and test it through `ping www.google.com`.  
+      <div align=center><img src="https://user-images.githubusercontent.com/43268820/166199407-49e504c2-b993-4ebb-9fff-2f511e4d02a7.png" width="600"></div>
   14. Configure one node (e.g., spark40) to log in to other containers through SSH without password.  
       14.1. Start all relevant containers in both PhyM and VM. `docker start spark40` (and spark41, spark30, spark31);  
       14.2. Attain the node (e.g., spark40), `docker exec -it spark40 /bin/bash`;  
@@ -138,7 +140,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
         echo 192.168.231.41 slave41 >> /etc/hosts
         /bin/bash
         ```
-      &ensp;&ensp;&ensp;&ensp;16.7.5.3. `chmod +x /root/init.sh`
+      &ensp;&ensp;&ensp;&ensp;16.7.5.3. `chmod +x /root/init.sh`  
       &ensp;&ensp;&ensp;&ensp;16.7.5.4. Copy it to the other three nodes, through  
       `scp /root/init.sh root@192.168.0.41:/root/init.sh`;  
       `scp /root/init.sh root@192.168.0.30:/root/init.sh`;  
@@ -160,7 +162,8 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       &ensp;&ensp;16.8.3 Input `192.168.0.40:8080` at HostM's brower and you can see: 
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166196184-4207b278-3dbc-4c41-87cd-449b4787047e.png" width="900"></div>
       There are three workers in the spark cluster;  
-      &ensp;&ensp;16.8.4 You can also change the hosts in HostM, through add `192.168.0.40 master` in the file, and if inputing 'master:8080', it can also work.
+      
+      &ensp;&ensp;16.8.4 You can also change the [hosts](https://docs.rackspace.com/support/how-to/modify-your-hosts-file/) in HostM, through add `192.168.0.40 master` in the file, and if inputing 'master:8080', it can also work.
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197350-365d0946-bbf6-44b9-863f-dd775cb23382.png" width="300"></div>
   
       16.9. Test spark cluster  
@@ -170,7 +173,6 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197829-c6ce290e-bbd9-44c2-9a43-a4f1182f54a4.png" width="600"></div>
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197882-ed320699-9055-4a5a-a22f-294209e08eee.png" width="900"></div>
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197932-951ad58f-cf4e-43c5-bd0e-9de37dc2f1d5.png" width="900"></div>
-
 **Succussfully!! Eploying Spark cluster based on dockers between two computers by a network cable**
       
 
