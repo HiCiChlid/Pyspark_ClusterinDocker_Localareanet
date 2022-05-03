@@ -54,7 +54,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
     6.6. Input `sudo docker run hello-world` to vertify the installation;  
     6.7. Refer to the [link](https://docs.docker.com/engine/install/linux-postinstall/) to do more things for docker，e.g., non-root user, starting on boot.  
   7. Install spark and some other softwares as the master node through dockerfile `docker build -t your_image_name:master https://raw.githubusercontent.com/HiCiChlid/geosci-pyenv/main/dockerfile`.  
-     Install the slave node through dockerfile `docker build -t your_image_name:slave https://raw.githubusercontent.com/HiCiChlid/pysparkcluster_indocker_bynetworkcable/main/dockerfile`  
+     Install the slave node through dockerfile `docker build -t your_image_name:slave https://raw.githubusercontent.com/HiCiChlid/Spark-cluster-in_docker-by_networkcable/main/dockerfile`  
      You can choose which node to deploy on which one machine.  
   8. Open net card promiscuous mode for both linux machines，`ip link set eno1 promisc on` for PhyM's ethernet net card named as eno1, and `ip link set ens33 promisc on` for VM's net card named as ens33. If success, "ifconfig" appears PROMISC as shown in red rectangle.  <div align=center><img src="https://user-images.githubusercontent.com/43268820/165923712-b55b41fb-0204-4279-9d73-5d697342b417.png" width="600"></div>
   9. Due to PhyM and VM are connected through HostM (192.168.0.1), so the Gateway is 192.168.0.1;  
@@ -107,7 +107,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.41:/usr/local/spark/conf`,  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.30:/usr/local/spark/conf`,  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.31:/usr/local/spark/conf`;  
-      16.5. Create slaves file through `cp slaves.template slaves`;  
+      16.5. Create slaves file through `cp workers.template workers`;  
       16.6. Edit slaves file, `vim slaves`, press 'i' to enter "Insert" mode, delete localhost and type  
       ```
       192.168.0.41
