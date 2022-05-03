@@ -108,7 +108,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.30:/usr/local/spark/conf`,  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.31:/usr/local/spark/conf`;  
       16.5. Create slaves file through `cp workers.template workers`;  
-      16.6. Edit slaves file, `vim slaves`, press 'i' to enter "Insert" mode, delete localhost and type  
+      16.6. Edit slaves file, `vim workers`, press 'i' to enter "Insert" mode, delete localhost and type  
       ```
       192.168.0.41
       192.168.0.30
