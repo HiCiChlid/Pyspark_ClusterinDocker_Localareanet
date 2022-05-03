@@ -107,8 +107,8 @@ The instruction of deploying Pyspark cluster based on docker between two compute
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.41:/usr/local/spark/conf`,  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.30:/usr/local/spark/conf`,  
        `scp /usr/local/spark/conf/spark-env.sh root@192.168.0.31:/usr/local/spark/conf`;  
-      16.5. Create slave file through `cp slave.template slave`;  
-      16.6. Edit slave file, `vim slaves`, press 'i' to enter "Insert" mode, delete localhost and type  
+      16.5. Create slaves file through `cp slaves.template slaves`;  
+      16.6. Edit slaves file, `vim slaves`, press 'i' to enter "Insert" mode, delete localhost and type  
       ```
       192.168.0.41
       192.168.0.30
@@ -145,7 +145,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       `scp /root/init.sh root@192.168.0.41:/root/init.sh`;  
       `scp /root/init.sh root@192.168.0.30:/root/init.sh`;  
       `scp /root/init.sh root@192.168.0.31:/root/init.sh`;  
-      &ensp;&ensp;&ensp;&ensp;16.7.5.5. Exit the current nodes through inputting `exit` and stop these containers `docker stop slave_41` etc, and then open these containers through `docker start slave_41` etc.;  
+      &ensp;&ensp;&ensp;&ensp;16.7.5.5. Exit the current nodes through inputting `exit` and stop these containers `docker stop slave41` etc, and then open these containers through `docker start slave41` etc.;  
       &ensp;&ensp;&ensp;&ensp;16.7.5.6. Re-attain these four nodes through  
       `docker exec geosci-env_M40 /root/init.sh`;  
       `docker exec slave41 -it /root/init.sh`;  
