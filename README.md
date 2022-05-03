@@ -1,4 +1,4 @@
-# pysparkcluster_indocker_bynetworkcable
+# Spark-cluster-in_docker-by_networkcable
 The instruction of deploying Pyspark cluster based on docker between two computers by a network cable.  
 
 ## Requirement:
