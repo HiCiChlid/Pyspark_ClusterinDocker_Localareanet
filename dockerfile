@@ -33,10 +33,10 @@ ENV CLASSPATH $CLASSPATH:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
 
 # install spark
 WORKDIR /usr/local
-RUN wget "http://archive.apache.org/dist/spark/spark-2.4.5/spark-2.4.5-bin-hadoop2.7.tgz" \
+RUN wget "https://archive.apache.org/dist/spark/spark-3.2.1/spark-3.2.1-bin-hadoop2.7.tgz" \
     && tar -vxf spark-* \
-    && mv spark-2.4.5-bin-hadoop2.7 spark \
-    && rm -rf spark-2.4.5-bin-hadoop2.7.tgz
+    && mv spark-3.2.1-bin-hadoop2.7 spark \
+    && rm -rf spark-3.2.1-bin-hadoop2.7.tgz
 ENV SPARK_HOME /usr/local/spark
 EXPOSE 6066 8080 7077 4044 18080 8888
 ENV PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:$SPARK_HOME/bin$PATH
@@ -51,7 +51,8 @@ RUN apt install -y python3.6 \
 RUN pip3 install --upgrade pip \
 && pip3 install jupyter==1.0.0 \ 
 && pip3 install findspark==1.4.2 \ 
-&& pip3 install pyspark==3.0.1
+&& pip3 install pyspark==3.0.1 \
+&& pip3 install koalas
 
 # install ssh server about the remote operation
 RUN apt-get install -y openssh-server \
