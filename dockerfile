@@ -51,8 +51,7 @@ RUN apt install -y python3.6 \
 RUN pip3 install --upgrade pip \
 && pip3 install jupyter==1.0.0 \ 
 && pip3 install findspark==1.4.2 \ 
-&& pip3 install pyspark==3.0.1 \
-&& pip3 install koalas
+&& pip3 install pyspark==3.0.1
 
 # install ssh server about the remote operation
 RUN apt-get install -y openssh-server \
