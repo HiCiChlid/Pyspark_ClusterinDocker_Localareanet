@@ -66,16 +66,16 @@ The instruction of deploying Pyspark cluster based on docker between two compute
      Self-booting: after `sudo su` add `.host:/ /mnt fuse.vmhgfs-fuse allow_other,defaults 0 0` to /etc/fstab.  
   12. Create docker containers for two machines,  
     In VM node1 `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v /mnt/[connected_folder]:/home/current -id --name=geosci-env_M40 -p 8888:8888 -p 4040:4040 --shm-size 2g your_image_name:master /bin/bash`;  
-    In VM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.41 --name=spark41 your_image_name:slave /bin/bash`;  
-    In PhyM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.30 --name=spark30 your_image_name:slave /bin/bash`;  
-    In PhyM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.31 --name=spark31 your_image_name:slave /bin/bash`;   
-  13. Check network connections between containers, for example, "spark40" ping "spark30"; or "spark31" ping "spark41";  <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="600"></div>
+    In VM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.41 --name=slave41 your_image_name:slave /bin/bash`;  
+    In PhyM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.30 --name=slave30 your_image_name:slave /bin/bash`;  
+    In PhyM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.31 --name=slave31 your_image_name:slave /bin/bash`;   
+  13. Check network connections between containers, for example, "slave40" ping "slave30"; or "slave31" ping "slave41";  <div align=center><img src="https://user-images.githubusercontent.com/43268820/165934538-d2d8d1cd-b320-4b6e-a2d7-dfa6d31ee392.png" width="600"></div>
       I hope master node to access the global Internet, I can input `docker network connect bridge geosci-env_M40`, and test it through `ping www.google.com`.  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166199407-49e504c2-b993-4ebb-9fff-2f511e4d02a7.png" width="600"></div>
-  14. Configure one node (e.g., spark40) to log in to other containers through SSH without password.  
-      14.1. Start all relevant containers in both PhyM and VM. `docker start spark40` (and spark41, spark30, spark31);  
-      14.2. Attain the node (e.g., spark40), `docker exec -it spark40 /bin/bash`;  
-      14.3. In spark40, input `sh gs.sh` to generate the public/private rsa key pair; <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130560-d736f485-9563-476c-904a-1629c14ef05e.png" width="600"></div>  
+  14. Configure one node (e.g., slave40) to log in to other containers through SSH without password.  
+      14.1. Start all relevant containers in both PhyM and VM. `docker start geosci-env_M40` (and slave41, slave30, slave31);  
+      14.2. Attain the node (e.g., geosci-env_M40), `docker exec -it geosci-env_M40 /bin/bash`;  
+      14.3. In geosci-env_M40, input `sh gs.sh` to generate the public/private rsa key pair; <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130560-d736f485-9563-476c-904a-1629c14ef05e.png" width="600"></div>  
       14.4. Copy the key to other docker containers,  
       `ssh-copy-id root@192.168.0.41`, and input the password `abc123` (you can change it by yourselves);  <div align=center><img src="https://user-images.githubusercontent.com/43268820/166130655-a9b6fbc1-98f9-425a-b80f-21d34e176130.png" width="600"></div>   
       `ssh-copy-id root@192.168.0.30`, and input the password `abc123`;  
@@ -148,9 +148,9 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       &ensp;&ensp;&ensp;&ensp;16.7.5.5. Exit the current nodes through inputting `exit` and stop these containers `docker stop slave_41` etc, and then open these containers through `docker start slave_41` etc.;  
       &ensp;&ensp;&ensp;&ensp;16.7.5.6. Re-attain these four nodes through  
       `docker exec geosci-env_M40 /root/init.sh`;  
-      `docker exec slave_41 -it /root/init.sh`;  
-      `docker exec slave_30 -it /root/init.sh`;  
-      `docker exec slave_31 -it /root/init.sh`.      
+      `docker exec slave41 -it /root/init.sh`;  
+      `docker exec slave30 -it /root/init.sh`;  
+      `docker exec slave31 -it /root/init.sh`.      
       16.8. Start Spark Cluster  
       &ensp;&ensp;16.8.1 Go to spark path `cd /usr/local/spark`;  
       &ensp;&ensp;16.8.2 Run `./sbin/start-all.sh`;    
