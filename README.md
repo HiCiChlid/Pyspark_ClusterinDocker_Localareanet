@@ -163,7 +163,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
   
       16.9. Test spark cluster  
       &ensp;&ensp;16.9.1 Go to spark path `cd /usr/local/spark`;  
-      &ensp;&ensp;16.9.2 Input `./bin/spark-submit --master spark://192.168.0.40:7077 --class org.apache.spark.examples.SparkPi examples/jars/spark-examples_2.11-2.4.5.jar 10000`  
+      &ensp;&ensp;16.9.2 Input `./bin/spark-submit --master spark://192.168.0.40:7077 --class org.apache.spark.examples.SparkPi examples/jars/spark-examples_2.12-3.2.1.jar 10000`  
       We can find:  
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197829-c6ce290e-bbd9-44c2-9a43-a4f1182f54a4.png" width="600"></div>
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197882-ed320699-9055-4a5a-a22f-294209e08eee.png" width="900"></div>
