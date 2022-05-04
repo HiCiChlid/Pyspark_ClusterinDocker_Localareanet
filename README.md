@@ -128,7 +128,8 @@ The instruction of deploying Pyspark cluster based on docker between two compute
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166190077-e4a789f2-639f-41c9-a4b7-4a59ee87c595.png" width="600"></div> 
           <div align=center><img src="https://user-images.githubusercontent.com/43268820/166189967-201e672a-2bd2-41ad-b032-0735d656df36.png" width="600"></div> 
 
-      &ensp;&ensp;16.7.5. Create a host change scrtipt `init.sh` to change the hosts:  
+      &ensp;&ensp;16.7.5. Restart docker service, `service docker start`, and open all containers, e.g., `docker start geosci-env_M40`, and then attach the master node `docker exec -it geosci-env_M40 /bin/bash`.
+      Create a host change scrtipt `init.sh` to change the hosts:  
       &ensp;&ensp;&ensp;&ensp;16.7.5.1. Attain 'master' node;  
       &ensp;&ensp;&ensp;&ensp;16.7.5.2. Input `vim /root/init.sh` and write the following contents into it:  
         ```
