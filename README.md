@@ -135,10 +135,10 @@ The instruction of deploying Pyspark cluster based on docker between two compute
         ```
         #!/bin/bash
         echo 127.0.0.1 localhost > /etc/hosts
-        echo 192.168.231.30 slave30 >> /etc/hosts
-        echo 192.168.231.31 slave31 >> /etc/hosts
-        echo 192.168.231.40 master >> /etc/hosts
-        echo 192.168.231.41 slave41 >> /etc/hosts
+        echo 192.168.0.30 slave30 >> /etc/hosts
+        echo 192.168.0.31 slave31 >> /etc/hosts
+        echo 192.168.0.40 master >> /etc/hosts
+        echo 192.168.0.41 slave41 >> /etc/hosts
         /bin/bash
         ```
       &ensp;&ensp;&ensp;&ensp;16.7.5.3. `chmod +x /root/init.sh`  
