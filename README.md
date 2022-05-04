@@ -236,7 +236,7 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       `scp -r /usr/local/hadoop/etc/hadoop root@slave41:/usr/local/hadoop/etc`.  
       17.10 Format hdfs namenode, `hdfs namenode -format`  
       17.11 Set up all nameNodes in all containers, `.sbin/hadoop-daemon.sh start namenode` or `/usr/local/hadoop/sbin/hadoop-daemon.sh start namenode`;  
-      17.12 Start Hdfs, `./sbin/start-dfs.sh` and input your password twice;  
+      17.12 Start Hdfs, `./sbin/start-dfs.sh` or `/usr/local/hadoop/sbin/start-dfs.sh` and input your password twice;  
       17.13 Open `192.168.0.40:50070` to open the WebUI.   
       
  **Successfully!! Deploying Spark cluster based on dockers between two computers by a network cable**
