@@ -39,7 +39,16 @@ RUN wget "https://archive.apache.org/dist/spark/spark-3.2.1/spark-3.2.1-bin-hado
     && rm -rf spark-3.2.1-bin-hadoop2.7.tgz
 ENV SPARK_HOME /usr/local/spark
 EXPOSE 6066 8080 7077 4044 18080 8888
-ENV PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:$SPARK_HOME/bin$PATH
+
+# install hadoop
+WORKDIR /usr/local
+RUN wget "http://archive.apache.org/dist/hadoop/core/hadoop-2.7.7/hadoop-2.7.7.tar.gz" \
+    && tar -vxf hadoop-* \
+    && mv hadoop-2.7.7 hadoop \
+    && rm -rf hadoop-2.7.7.tar.gz
+ENV HADOOP_HOME /usr/local/hadoop
+ENV PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:$SPARK_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin$PATH
+EXPOSE 50010 50075 50475 50020 50070 50470 8020 8485 8480 8019
 
 # install python3
 RUN apt install -y python3.6 \
