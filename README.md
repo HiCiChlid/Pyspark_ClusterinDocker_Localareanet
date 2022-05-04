@@ -169,4 +169,74 @@ The instruction of deploying Pyspark cluster based on docker between two compute
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197829-c6ce290e-bbd9-44c2-9a43-a4f1182f54a4.png" width="600"></div>
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197882-ed320699-9055-4a5a-a22f-294209e08eee.png" width="900"></div>
       <div align=center><img src="https://user-images.githubusercontent.com/43268820/166197932-951ad58f-cf4e-43c5-bd0e-9de37dc2f1d5.png" width="900"></div>
-**Successfully!! Deploying Spark cluster based on dockers between two computers by a network cable**
+      
+  17. Configure Hadoop(Hdfs) cluster  
+      17.1 attain geosci-env_M40 container, and then go to hadoop path, `cd /usr/local/hadoop`;  
+      17.2 Set up core-site.xml, `vim ./etc/hadoop/core-site.xml`:  
+      add the following contents between \<configuration> and \</configuration>
+      ```markdown
+      <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://master:9000</value>
+      </property>
+      <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/usr/local/hadoop/tmp/</value>
+      </property>
+      ```  
+      17.3 Set up hadoop-env.sh, `vim ./etc/hadoop/hadoop-env.sh`:  
+      add `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64` to the file;  
+      17.4 Set up hdfs-site.xml, `vim ./etc/hadoop/hdfs-site.xml`:  
+      add the following contents between \<configuration> and \</configuration>
+      ```
+      <property>
+          <name>dfs.replication</name>
+          <value>1</value>
+      </property>
+      <property>
+            <name>dfs.namenode.secondary.http-address</name>
+            <value>slave41:50090</value>
+      </property>
+      ```  
+      17.5 Set up yarn-env.sh, `vim ./etc/hadoop/yarn-env.sh`:  
+      add `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64` to the file;  
+      17.6 Set up yarn-site.xml, `vim ./etc/hadoop/yarn-site.xml`
+      add the following contents between \<configuration> and \</configuration>
+      ```
+      <property>
+          <name>yarn.nodemanager.aux-services</name>
+          <value>mapreduce_shuffle</value>
+      </property>
+      <property>
+          <name>yarn.resourcemanager.hostname</name>
+          <value>master</value>
+      </property>
+      ```
+      17.7 Set up mapred-env.sh, `vim ./etc/hadoop/mapred-env.sh`:  
+      add `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64` to the file;  
+      17.8 Set up mapred-site.xml, `cp mapred-site.xml.template mapred-site.xml`, and then `vim ./etc/hadoop/mapred-site.xml`:  
+      add the following contents between \<configuration> and \</configuration>
+      ```
+      <property>
+          <name>mapreduce.framework.name</name>
+          <value>yarn</value>
+      </property>
+      ```  
+      17.8 Set up slave file, `vim ./etc/hadoop/slaves`:  
+      replace localhost as
+      ```
+      master
+      slave41
+      slave30
+      slave31
+      ```
+      17.9 Copy these configuration files to other containers through  
+      `scp -r /usr/local/hadoop/etc/hadoop root@slave30:/usr/local/hadoop/etc`;  
+      `scp -r /usr/local/hadoop/etc/hadoop root@slave31:/usr/local/hadoop/etc`;  
+      `scp -r /usr/local/hadoop/etc/hadoop root@slave41:/usr/local/hadoop/etc`.  
+      17.10 Format hdfs namenode, `hdfs namenode -format`
+      17.11 Set up all nameNodes in all containers, `hadoop-daemon.sh start namenode`;  
+      17.12 Start Hdfs, `start ./sbin/start-dfs.sh` and input your password twice;  
+      17.13 Open `192.168.0.40:50070` to open the WebUI.   
+      
+ **Successfully!! Deploying Spark cluster based on dockers between two computers by a network cable**
