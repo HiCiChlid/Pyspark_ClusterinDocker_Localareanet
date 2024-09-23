@@ -65,7 +65,8 @@ The instruction of deploying Pyspark cluster based on docker between two compute
   11. Mount HostM's folders to VM, and set it self-booting, referring to the [link](https://linuxhint.com/mount_vmware_shares_command_line_linux_vm/#:~:text=To%20share%20a%20directory%2Ffolder%20from%20the%20host%20to%20a,Shared%20Folders%2C%20select%20Always%20enabled).  
      Self-booting: after `sudo su` add `.host:/ /mnt fuse.vmhgfs-fuse allow_other,defaults 0 0` to /etc/fstab.  
   12. Create docker containers for two machines,  
-    In VM node1 `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v /mnt/[connected_folder]:/home/current -id --name=geosci-env_M40 -p 8888:8888 -p 4040:4040 --shm-size 2g your_image_name:master /bin/bash`;  
+    In VM node1 `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v /mnt/[connected_folder]:/home/current -id --name=geosci-env_M40 --hostname=master -p 8888:8888 -p 4040:4040 --shm-size 2g your_image_name:master /bin/bash`;  
+    Note: `docker run --privileged --net=eth0_1 --ip=192.168.0.40 -v /mnt/[connected_folder]:/home/current -id --name=geosci-env_M40 -p 8888:8888 -p 4040:4040 --shm-size 2g your_image_name:master /bin/bash`
     In VM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.41 --name=slave41 your_image_name:slave /bin/bash`;  
     In PhyM node1 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.30 --name=slave30 your_image_name:slave /bin/bash`;  
     In PhyM node2 `docker run -it --privileged --net=eth0_1 --ip=192.168.0.31 --name=slave31 your_image_name:slave /bin/bash`;   
